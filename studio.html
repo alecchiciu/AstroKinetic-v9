@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AstroKinetic-ID · Astronaut Neuromotor & Psychological Health Studio</title>
+  <link rel="stylesheet" href="/studio.css">
+  <script defer src="/vessel-3d.js"></script>
+  <script defer src="/rail-3d.js"></script>
+  <script defer src="/cutaway.js"></script>
+  <script defer src="/sensor-core.js"></script>
+  <script defer src="/pose-core.js"></script>
+  <script defer src="/studio.js"></script>
+<link rel="stylesheet" href="/guided.css"><script defer src="/stress.js"></script><script defer src="/affect.js"></script><script defer src="/guided.js"></script><link rel="stylesheet" href="/stress.css"><script defer src="/focus.js"></script><link rel="stylesheet" href="/focus.css"></head>
+<body autocomplete="off">
+  <!-- Interactive Space Starfield & Ambient Nebula Background -->
+  <canvas id="starfield"></canvas>
+  <div class="nebula"></div>
+
+  <!-- Sticky Mission Control Navigation Bar (AstraSight Style) -->
+  <header class="app-header">
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <div class="brand-mark">✳</div>
+        <div class="brand-titles">
+          <strong>ASTROKINETIC-ID</strong>
+          <small>SENSOR STUDIO / 04</small>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="#vessel" class="active">🚀 Spacecraft</a>
+        <a href="#live-detection-section">⚡ Live Detection</a>
+        <a href="#surface">🖐️ Dense Rail</a>
+        <a href="#pose-section">🖐️ Hand Pose</a>
+        <a href="#parameters-section">⚙️ Parameters</a>
+        <a href="#evidence">🛰️ Research</a>
+      </nav>
+      <div class="header-actions">
+        <span id="conn-pill" class="conn-pill">
+          <span class="dot pulse ok"></span>
+          <span id="conn-status-text">Simulated Flight</span>
+        </span>
+        <button id="btn-quick-connect" class="btn btn-secondary btn-sm" title="Toggle USB Hardware Stream">⚡ Connect Hardware</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container"><section class="guided-intro"><span class="eyebrow">ASTROKINETIC / CONTACT OBSERVATORY</span><h1>Your spacecraft.<br>One connected workspace.</h1><p>Connect your rail, choose a spacecraft, then start monitoring. No hardware? Explore with clearly labelled demo data.</p><div class="guide-tabs" role="navigation" aria-label="Jump to panel"><button data-step="setup">01　⌁ Connect</button><button data-step="vessel">02　◇ Spacecraft</button><button data-step="monitor">03　◉ Monitor</button><button data-step="settings">04　⚙ Settings</button></div></section>
+    <!-- Hero / Mission Concept (AstraSight Style) -->
+    <section class="hero-section">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <span class="eyebrow">NASA SPACE APPS CHALLENGE · MEDICAL MONITORING SOFTWARE</span>
+          <h1>Astronaut neuromotor health,<br><span class="grad-text">in every push-off.</span></h1>
+          <p class="hero-lead">
+            In microgravity, locomotion occurs through handrail push-offs. By instrumenting the entire translation bar 
+            with a dense <strong>10 × 10 mm tactile sensor matrix in a repeating 3–2–2–3 pattern</strong>, we capture 
+            contact dynamics, multi-digit load sharing, 8–12 Hz micro-tremor, and autonomic arousal to evaluate psychological 
+            and cognitive health in real time.
+          </p>
+          <div class="hero-actions">
+            <button id="btn-hero-live" class="btn btn-primary">▶ Start Live Detection</button>
+            <a href="#vessel" class="btn btn-ghost">🚀 Spacecraft & Rails →</a>
+            <button id="export-session" class="btn btn-ghost">Export Flight Session ↗</button>
+            <button id="export-pheno-report" class="btn btn-ghost">Session Research Report ↓</button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-pill"><strong>150</strong><span>Taxels / 600 mm</span></div>
+            <div class="stat-pill"><strong>8–12 Hz</strong><span>Micro-Tremor Band</span></div>
+            <div class="stat-pill"><strong>100%</strong><span>On-Device Privacy</span></div>
+            <div class="stat-pill"><strong>&lt; 15 ms</strong><span>Real-Time Latency</span></div>
+          </div>
+        </div>
+
+        <div class="hero-hud-card">
+          <div class="hud-header">
+            <div>
+              <span class="eyebrow" style="font-size:10px;">VEGA // HUD OVERLAY</span>
+              <strong style="font-size:14px;color:#fff;display:block;">AST-01 · Station Keeping</strong>
+            </div>
+            <span id="origin" class="badge ok">FLIGHT STREAM</span>
+          </div>
+          <div class="hud-vitals-row">
+            <div class="hud-vital-box">
+              <span>PUSH-OFF FORCE</span>
+              <strong id="hero-push-force">18.4 N</strong>
+            </div>
+            <div class="hud-vital-box">
+              <span>8–12 Hz TREMOR</span>
+              <strong id="hero-tremor">0.82 mm/s²</strong>
+            </div>
+            <div class="hud-vital-box">
+              <span>AUTONOMIC EDA</span>
+              <strong id="hero-eda">3.2 μS</strong>
+            </div>
+            <div class="hud-vital-box">
+              <span>DWELL LATENCY</span>
+              <strong id="hero-dwell">290 ms</strong>
+            </div>
+          </div>
+          <canvas id="hero-sparkline" class="hud-sparkline-canvas"></canvas>
+          <p id="origin-note" style="font-size:11px;color:var(--text-faint);margin-top:8px;font-family:var(--mono);">
+            Real-time biometric telemetry streaming from active handrail matrix.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Global System Status Toast -->
+    <div id="status" role="status" class="status-toast">
+      <span>● System Ready. Spacecraft cabin mapped, 150-cell tactile handrail online.</span>
+      <span class="badge accent">LOCAL ENGINE</span>
+    </div>
+
+    <!-- ==========================================================
+         01 / SPACECRAFT SELECTION & CABIN MAP
+         ========================================================== -->
+    <section class="panel" id="vessel">
+      <div class="panel-header">
+        <div class="panel-header-main">
+          <span class="eyebrow">01 / SPACECRAFT CABIN & HANDRAIL MAP</span>
+          <h2 id="vessel-name">Asteria · Deep Space Exploration Rocket</h2>
+          <p>Select a spacecraft model or upload custom 3D vehicle geometries. Click any numbered rail on the cabin map to inspect its full tactile sensor telemetry.</p>
+        </div>
+        <div class="panel-header-actions">
+          <div class="view-toggles">
+            <button id="btn-view-3d" class="active" title="Interactive 3D Spacecraft Cabin">3D Orbit View</button>
+            <button id="btn-view-2d" title="2D Architectural Blueprint Cutaway">2D Blueprint</button>
+          </div>
+          <button id="btn-auto-rotate" class="btn btn-secondary btn-sm" title="Toggle 360° auto-rotation">⟳ Rotate</button>
+          <button id="btn-reset-view" class="btn btn-secondary btn-sm" title="Reset Camera">Reset Cam</button>
+          <select id="vessel-preset" style="display:none;">
+            <option value="asteria">Asteria</option>
+            <option value="orion">Orion</option>
+            <option value="iss_lab">ISS Lab</option>
+            <option value="gateway">Gateway</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Spacecraft Preset Visual Cards -->
+      <div class="spacecraft-grid">
+        <div id="card-vessel-asteria" class="vessel-card active" data-preset="asteria">
+          <span class="vessel-icon">🚀</span>
+          <strong>Asteria Exploration</strong>
+          <p>Long-duration deep space exploration craft with 4 translation handrails.</p>
+          <div class="vessel-meta">4 Rails · 600 mm Bars</div>
+        </div>
+        <div id="card-vessel-orion" class="vessel-card" data-preset="orion">
+          <span class="vessel-icon">🛰️</span>
+          <strong>Orion-inspired concept</strong>
+          <p>Artemis crew capsule with 3 axial propulsion rails for lunar transit.</p>
+          <div class="vessel-meta">3 Rails · 480 mm Bars</div>
+        </div>
+        <div id="card-vessel-iss" class="vessel-card" data-preset="iss_lab">
+          <span class="vessel-icon">🔬</span>
+          <strong>ISS Science Module</strong>
+          <p>Columbus / Destiny laboratory module with dense wall and ceiling rails.</p>
+          <div class="vessel-meta">4 Rails · 600 mm Bars</div>
+        </div>
+        <div id="card-vessel-gateway" class="vessel-card" data-preset="gateway">
+          <span class="vessel-icon">🌕</span>
+          <strong>Gateway-inspired concept</strong>
+          <p>Cis-lunar outpost habitat with dual hatch and docking locomotion bars.</p>
+          <div class="vessel-meta">3 Rails · 520 mm Bars</div>
+        </div>
+        <div id="btn-upload-vessel-modal" class="vessel-card vessel-upload-card">
+          <span class="vessel-icon" style="color:var(--cyan);">+</span>
+          <strong>Upload Custom Model</strong>
+          <p>Upload .OBJ / .GLB 3D mesh or 2D architectural blueprint PNG.</p>
+          <div class="vessel-meta" style="color:var(--cyan);">Click to Expand 🛠️</div>
+        </div>
+      </div>
+
+      <!-- Spacecraft Cabin Viewport (3D Canvas / 2D SVG Blueprint) -->
+      <div class="viewport-wrapper">
+        <div class="viewport-top-controls">
+          <span class="viewport-badge">CABIN INTERIOR MAP · SELECT A RAIL</span>
+          <label style="font-size:11px;color:var(--text-faint);background:rgba(4,6,13,0.85);padding:4px 10px;border-radius:999px;border:1px solid var(--border);">
+            <input type="checkbox" id="place-mode"> Reposition Selected Rail
+          </label>
+        </div>
+        <div id="spacecraft-viewport-container">
+          <div id="ship-3d-view" class="viewport-box"></div>
+          <div id="ship-view" class="viewport-box" style="display:none;">
+            <svg id="architecture" viewBox="0 0 1200 640" aria-label="Spacecraft cutaway blueprint. Select a numbered rail."></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Rail Selection List -->
+      <details class="rail-list-disclosure">
+        <summary>Available Translation Rails in Current Vehicle <span class="rail-chevron" aria-hidden="true">›</span></summary>
+        <div id="rail-list" class="rail-list"></div>
+      </details>
+
+      <!-- Spacecraft Adaptation Accordion -->
+      <details id="details-upload-vessel">
+        <summary>🛠️ Vehicle Customizer · Upload 3D Rocket Model, 2D Blueprint, or Save Cabin Layout</summary>
+        <div style="padding:16px 0;">
+          <div class="spacecraft-grid">
+            <div class="vessel-card" style="cursor:default;">
+              <strong>Upload 3D Mesh (.OBJ, .GLTF, .GLB)</strong>
+              <p>Renders custom rocket or station hull in the 3D orbit viewport.</p>
+              <label class="btn btn-secondary btn-file btn-sm">Choose 3D File
+                <input id="model-3d-file" type="file" accept=".obj,.gltf,.glb">
+              </label>
+            </div>
+            <div class="vessel-card" style="cursor:default;">
+              <strong>Upload 2D Blueprint (PNG / JPG)</strong>
+              <p>Loads architectural cutaway floorplan for interactive rail placement.</p>
+              <label class="btn btn-secondary btn-file btn-sm">Choose Blueprint Image
+                <input id="image-file" type="file" accept="image/png,image/jpeg">
+              </label>
+            </div>
+            <div class="vessel-card" style="cursor:default;">
+              <strong>Vessel Configuration JSON</strong>
+              <p>Export or import cabin dimensions and 3D handrail coordinates.</p>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
+                <label class="btn btn-secondary btn-file btn-sm">Load JSON
+                  <input id="model-file" type="file" accept="application/json,.json">
+                </label>
+                <button id="export-model" class="btn btn-secondary btn-sm">Save JSON</button>
+                <button id="reset-model" class="btn btn-secondary btn-sm">Reset</button>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+            <input id="new-rail-name" placeholder="New handrail name (e.g. Science Airlock Bar)" maxlength="60" style="flex:1;min-width:200px;background:rgba(4,6,13,0.8);border:1px solid var(--border);border-radius:8px;padding:8px 12px;">
+            <button id="add-rail" class="btn btn-secondary btn-sm">+ Add Handrail</button>
+            <button id="remove-rail" class="btn btn-secondary btn-sm" style="color:var(--crit);border-color:rgba(255,93,115,0.3);">Remove Selected Rail</button>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ==========================================================
+         02 / LIVE DETECTION & REAL-TIME PSYCHOLOGY
+         ========================================================== -->
+    <section class="panel" id="live-detection-section">
+      <div class="panel-header">
+        <div class="panel-header-main">
+          <span class="eyebrow">02 / LIVE DETECTION & PSYCHOLOGICAL PHENOTYPING</span>
+          <h2>Live contact & physiology</h2>
+          <p>Start monitoring to follow contact and available sensor channels. Psychological state requires self-report; it is not diagnosed from the rail.</p>
+        </div>
+        <span class="badge accent">RESEARCH PROTOTYPE</span>
+      </div>
+
+      <!-- Live Detection Big Action Banner -->
+      <div class="live-detection-banner">
+        <div class="live-controls-group">
+          <label for="detection-mode">Input mode</label><select id="detection-mode"><option value="recorded">▷ Recorded Replay</option><option value="hardware">⌁ Hardware Live</option><option value="lab">✋ Interactive Lab</option></select><button id="btn-live-toggle" class="btn btn-live btn-primary" style="font-size:15px;padding:12px 26px;">
+            ▶ Start Live Detection
+          </button>
+          <div class="live-scenario-select">
+            <label for="scenario-select">Mission Scenario:</label>
+            <select id="scenario-select">
+              <option value="nominal">AST-01 · Nominal Station-Keeping (Calm / Focused)</option>
+              <option value="workload">AST-02 · Emergency EVA Drill (High Cognitive Load)</option>
+              <option value="fatigue">AST-03 · Extended Translation Shift (Neuromotor Fatigue)</option>
+              <option value="adaptation">AST-04 · Early Flight Transit (Space Motion Ataxia)</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span id="live-indicator-badge" class="badge ok">
+            <span class="dot pulse ok"></span> <span id="live-freq-text">READY · CLICK START</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Affective & Psychological Diagnosis Board -->
+      <div class="affective-grid">
+        <!-- Live Emotion & Mental State Card -->
+        <div class="emotion-card" id="live-emotion-card">
+          <div class="emotion-badge-row">
+            <span class="eyebrow">AFFECTIVE STATUS</span>
+            <span id="badge-stress" class="badge ok">NOMINAL · CALM</span>
+          </div>
+          <div class="affective-state-title">
+            <span id="live-state-icon" class="state-icon">🧘</span>
+            <span id="live-state-title">Calm & Focused</span>
+          </div>
+          <p id="live-state-desc" class="affective-state-desc">
+            Astronaut demonstrates consistent neuromotor coordination, symmetrical digit load sharing, and low sympathetic tone. Biomechanical push-off trajectory is fluid.
+          </p>
+          <div class="affective-wave-box">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text-faint);margin-bottom:4px;">
+              <span>SYMPATHETIC EDA / JITTER WAVEFORM</span>
+              <span id="wave-freq-readout">25.0 Hz</span>
+            </div>
+            <canvas id="live-arousal-canvas" class="wave-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- VEGA Copilot Clinical Guidance HUD -->
+        <div class="vega-hud-box">
+          <div class="vega-header">
+            <div class="vega-avatar">V</div>
+            <span>VEGA // FLIGHT SURGEON COPILOT</span>
+          </div>
+          <p id="flight-surgeon-note" class="vega-text">
+            Astronaut demonstrates fluid motor coordination. Thumb-to-digit load sharing is balanced (23% / 21% / 22% / 19% / 15%). Sympathetic tone nominal at 3.2 μS. Zero micro-slip detected during terminal propulsion. Cleared for standard intravehicular tasks.
+          </p>
+          <div class="vega-recommendation">
+            ✓ Mission Status: Ready for High-Tempo Tasks
+          </div>
+        </div>
+      </div>
+
+      <!-- Phenotype KPI Cards -->
+      <div class="pheno-cards-grid">
+        <article class="pheno-card">
+          <span class="pheno-label">Propulsion Impulse</span>
+          <strong id="pheno-impulse" class="pheno-val">12.4 <small>N·s</small></strong>
+          <small class="dim">Takeoff thrust: ∫ F dt</small>
+          <div class="pheno-sub">RFD: <span id="pheno-rfd" style="color:var(--cyan);">185 N/s</span></div>
+        </article>
+
+        <article class="pheno-card">
+          <span class="pheno-label">8–12 Hz Micro-Tremor</span>
+          <strong id="pheno-tremor" class="pheno-val">0.82 <small>mm/s²</small></strong>
+          <small class="dim">Physiological tremor jitter</small>
+          <div class="pheno-sub">Stability: <span id="pheno-stability" style="color:var(--ok);">94%</span> (Nominal)</div>
+        </article>
+
+        <article class="pheno-card">
+          <span class="pheno-label">Autonomic EDA / GSR</span>
+          <strong id="pheno-eda" class="pheno-val">3.2 <small>μS</small></strong>
+          <small class="dim">Palmar sympathetic arousal</small>
+          <div class="pheno-sub">Arousal: <span id="pheno-arousal" class="badge ok" style="padding:2px 6px;">Nominal</span></div>
+        </article>
+
+        <article class="pheno-card">
+          <span class="pheno-label">Pre-Propulsion Dwell</span>
+          <strong id="pheno-dwell" class="pheno-val">290 <small>ms</small></strong>
+          <small class="dim">Contact hesitation latency</small>
+          <div class="pheno-sub">Hesitation: <span id="pheno-hesitation" style="color:var(--ok);">Low (Confident)</span></div>
+        </article>
+
+        <article class="pheno-card">
+          <span class="pheno-label">Slip Velocity / Drift</span>
+          <strong id="pheno-slip" class="pheno-val">1.2 <small>mm/s</small></strong>
+          <small class="dim">Center of Pressure displacement</small>
+          <div class="pheno-sub">Grip: <span id="pheno-cop-status" style="color:var(--ok);">High Stability</span></div>
+        </article>
+
+        <article class="pheno-card">
+          <span class="pheno-label">Fingertip Temperature</span>
+          <strong id="pheno-temp" class="pheno-val">32.6 <small>°C</small></strong>
+          <small class="dim">Thermal vasomotor tone</small>
+          <div class="pheno-sub">Perfusion: <span id="pheno-vaso" style="color:var(--ok);">Normal</span></div>
+        </article>
+      </div>
+
+      <!-- Composite Cognitive & Neuromotor Index Meters -->
+      <div class="composite-meters-row">
+        <div class="meter-box">
+          <div class="meter-header">
+            <span>Cognitive Workload Index</span>
+            <strong id="meter-cognitive-val" style="color:var(--cyan);font-family:var(--mono);">28 / 100</strong>
+          </div>
+          <div class="meter-bar-track">
+            <div id="meter-cognitive-fill" class="meter-bar-fill nominal" style="width: 28%;"></div>
+          </div>
+          <small class="meter-sub">Synthesizes dwell hesitation, sympathetic EDA surge, and grip variability.</small>
+        </div>
+
+        <div class="meter-box">
+          <div class="meter-header">
+            <span>Neuromotor Fatigue Score</span>
+            <strong id="meter-fatigue-val" style="color:var(--cyan);font-family:var(--mono);">18%</strong>
+          </div>
+          <div class="meter-bar-track">
+            <div id="meter-fatigue-fill" class="meter-bar-fill nominal" style="width: 18%;"></div>
+          </div>
+          <small class="meter-sub">Derived from 8–12 Hz micro-tremor power, RFD slope, and digit load reserve.</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         03 / DENSE SENSOR RAIL & REALISTIC ANATOMICAL HAND
+         ========================================================== -->
+    <section class="panel" id="surface">
+      <div class="panel-header">
+        <div class="panel-header-main">
+          <span class="eyebrow">03 / FULL-LENGTH DENSE TACTILE SENSOR HANDRAIL</span>
+          <h2 id="rail-name">Systems · Wall Rail</h2>
+          <p>Instrumented translation handrail with <strong>150 physical 10 × 10 mm tactile cells</strong> arranged in a <strong>repeating 3–2–2–3 pattern</strong> every 40 mm along the cylinder.</p>
+        </div>
+        <div class="panel-header-actions">
+          <span id="cell-count" class="badge">150 CELLS / 600 MM</span>
+          <span class="badge accent">10 × 10 MM TAXELS</span>
+          <span class="badge">3–2–2–3 REPEATING</span>
+        </div>
+      </div>
+
+      <!-- Tactile Studio Split: Realistic Hand (Left) & 3D Rail (Right) -->
+      <div class="tactile-studio-split" id="pose-section">
+        <!-- Left: Realistic Anatomical Hand Silhouette with Data-Driven Animations -->
+        <div class="hand-view-card">
+          <div class="hand-view-header">
+            <div>
+              <span class="eyebrow" style="font-size:10px;">ANATOMICAL POSE & DIGITS</span>
+              <h3 style="font-size:16px;color:#fff;margin-top:2px;">Hand Placement & Load Sharing</h3>
+            </div>
+            <span id="pose-badge" class="badge accent">BIOMECHANICAL ESTIMATE</span>
+          </div>
+
+          <!-- Realistic Anatomical SVG Hand -->
+          <div class="hand-svg-container">
+            <svg id="hand-view" viewBox="0 0 320 300" role="img" aria-label="Realistic anatomical hand silhouette with dynamic contact sensors and animations"></svg>
+          </div>
+
+          <p id="pose-result" style="font-size:12px;color:var(--text-dim);font-family:var(--mono);margin-bottom:12px;min-height:36px;">
+            Identified Cylindrical Power Grip. Hand placed at centroid 240 mm.
+          </p>
+
+          <!-- Digit Breakdown & Load Sharing -->
+          <div class="digit-bars-container" id="pose-fingers"></div>
+
+          <!-- Pose Controls -->
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;justify-content:center;">
+            <button id="demo-calibration" class="btn btn-secondary btn-sm">Load Calibrated Template</button>
+            <button id="calibrate-pose" class="btn btn-secondary btn-sm">Calibrate Current Frame</button>
+            <button id="clear-pose" class="btn btn-secondary btn-sm">Clear Calibration</button>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center;margin-top:10px;justify-content:center;font-size:12px;">
+            <label style="color:var(--text-faint);">Manual Digit Painter:
+              <select id="finger" style="background:rgba(4,6,13,0.8);border:1px solid var(--border);padding:3px 8px;border-radius:6px;font-size:12px;">
+                <option value="">Inspect Only</option>
+                <option>Thumb</option>
+                <option>Index</option>
+                <option>Middle</option>
+                <option>Ring</option>
+                <option>Little</option>
+                <option>Palm</option>
+                <option>Clear</option>
+              </select>
+            </label>
+            <button id="clear-labels" class="btn btn-secondary btn-sm">Clear</button>
+          </div>
+          <p id="finger-summary" style="display:none;"></p>
+          <p id="pose-description" style="display:none;"></p>
+        </div>
+
+        <!-- Right: 3D Cylindrical Handrail Visualizer & Unwrapped 2D Matrix -->
+        <div class="rail-visualizer-card">
+          <div class="handrail-3d-header">
+            <div>
+              <h3 style="font-size:16px;color:#fff;">3D Cylindrical Handrail & Tactile Matrix</h3>
+              <p id="surface-note" style="font-size:12px;color:var(--text-dim);margin-top:2px;">
+                10 × 10 mm tactile cells arranged in 3-2-2-3 repeating pattern around the cylinder.
+              </p>
+            </div>
+            <div class="rail-spin-controls">
+              <label>Spin:
+                <input id="rail-spin" type="range" min="0" max="360" value="30">
+              </label>
+              <label>Color By:
+                <select id="colour">
+                  <option value="contact">Contact State</option>
+                  <option value="pressure">Pressure (kPa)</option>
+                  <option value="fingers">Finger Regions</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <!-- 3D Cylindrical Rail Canvas Container -->
+          <div id="rail-3d-container" class="rail-3d-canvas-box"></div>
+
+          <!-- Unwrapped 2D Tactile Matrix -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+            <span style="font-family:var(--mono);font-size:11px;color:var(--cyan);text-transform:uppercase;">Unwrapped 2D Sensor Map (10 × 10 mm Cells)</span>
+            <div class="legend">
+              <span><i class="legend-swatch free"></i> Free</span>
+              <span><i class="legend-swatch contact"></i> Contact</span>
+              <span><i class="legend-swatch missing"></i> Missing</span>
+              <span id="pressure-scale">0 → 40+ kPa</span>
+              <span id="angle" style="color:var(--text-faint);">Angle: —</span>
+            </div>
+          </div>
+
+          <div class="surface-scroll">
+            <svg id="sensor-map" role="img" aria-label="Unwrapped cylindrical handrail sensor array"></svg>
+          </div>
+
+          <!-- Interactive Simulated Hand Placement -->
+          <div class="simulator-bar">
+            <span>🎮 Interactive Grasp Simulator:</span>
+            <label>Grasp Pose:
+              <select id="sim-grasp-type">
+                <option value="power">Cylindrical Power Grip</option>
+                <option value="thrust">Push-off Palm Thrust</option>
+                <option value="pinch">Precision Pinch Grip</option>
+                <option value="hook">Hook Propulsion Grip</option>
+              </select>
+            </label>
+            <button id="btn-sim-hand" class="btn btn-secondary btn-sm">Simulate Hand at Centroid</button>
+            <span id="cell-info" style="font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-left:auto;">Click a cell to inspect.</span>
+          </div>
+
+          <!-- Real-Time Tactile Readouts -->
+          <div class="pheno-cards-grid" style="margin-top:16px;">
+            <div class="pheno-card" style="padding:10px 14px;">
+              <span class="pheno-label">Active Taxels</span>
+              <strong id="active" class="pheno-val" style="font-size:17px;">—</strong>
+            </div>
+            <div class="pheno-card" style="padding:10px 14px;">
+              <span class="pheno-label">Contact Centroid</span>
+              <strong id="centroid" class="pheno-val" style="font-size:17px;">—</strong>
+            </div>
+            <div class="pheno-card" style="padding:10px 14px;">
+              <span class="pheno-label">Integrated Force</span>
+              <strong id="load" class="pheno-val" style="font-size:17px;">—</strong>
+            </div>
+            <div class="pheno-card" style="padding:10px 14px;">
+              <span class="pheno-label">Peak Cell Pressure</span>
+              <strong id="peak-pressure-readout" class="pheno-val" style="font-size:17px;">—</strong>
+            </div>
+            <div class="pheno-card" style="padding:10px 14px;">
+              <span class="pheno-label">Matrix Integrity</span>
+              <strong id="quality" class="pheno-val" style="font-size:17px;">—</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         04 / INTERACTIVE FLIGHT & BIOMECHANICAL PARAMETERS
+         ========================================================== -->
+    <section class="panel" id="parameters-section">
+      <div class="panel-header">
+        <div class="panel-header-main">
+          <span class="eyebrow">04 / INTERACTIVE FLIGHT & BIOMECHANICAL PARAMETERS</span>
+          <h2>Calibrate Variables & Test Biomechanical Responses</h2>
+          <p>Every parameter can be adjusted in real time. Hover or read the explanations below to understand how each variable informs astronaut health monitoring.</p>
+        </div>
+        <span class="badge accent">CALIBRATION ENGINE</span>
+      </div>
+
+      <div class="params-grid">
+        <!-- Parameter 1: Propulsion Impulse -->
+        <div class="param-card">
+          <div class="param-top">
+            <span class="param-title">🚀 Propulsion Impulse (N·s)</span>
+            <span id="param-impulse-val" class="param-value-pill">12.4 N·s</span>
+          </div>
+          <p class="param-desc">
+            Integral of normal force over push-off duration (∫ F dt). Determines takeoff velocity across the cabin. Higher values indicate energetic locomotion.
+          </p>
+          <div class="param-slider-row">
+            <input id="slider-impulse" type="range" min="4" max="32" step="0.5" value="12.4">
+          </div>
+          <div class="param-presets">
+            <button class="preset-chip" data-param="impulse" data-val="6.5">Gentle (6.5)</button>
+            <button class="preset-chip" data-param="impulse" data-val="12.4">Nominal (12.4)</button>
+            <button class="preset-chip" data-param="impulse" data-val="26.0">Emergency (26.0)</button>
+          </div>
+        </div>
+
+        <!-- Parameter 2: 8–12 Hz Physiological Micro-Tremor -->
+        <div class="param-card">
+          <div class="param-top">
+            <span class="param-title">〰️ 8–12 Hz Micro-Tremor (mm/s²)</span>
+            <span id="param-tremor-val" class="param-value-pill">0.82 mm/s²</span>
+          </div>
+          <p class="param-desc">
+            Involuntary physiological neuromuscular oscillations in the 8–12 Hz band. Primary biomarker for central nervous system fatigue and sensorimotor ataxia.
+          </p>
+          <div class="param-slider-row">
+            <input id="slider-tremor" type="range" min="0.2" max="3.5" step="0.05" value="0.82">
+          </div>
+          <div class="param-presets">
+            <button class="preset-chip" data-param="tremor" data-val="0.45">Resting (0.45)</button>
+            <button class="preset-chip" data-param="tremor" data-val="0.82">Nominal (0.82)</button>
+            <button class="preset-chip" data-param="tremor" data-val="2.40">Fatigued (2.40)</button>
+          </div>
+        </div>
+
+        <!-- Parameter 3: Autonomic EDA / GSR -->
+        <div class="param-card">
+          <div class="param-top">
+            <span class="param-title">⚡ Autonomic EDA / GSR (μS)</span>
+            <span id="param-eda-val" class="param-value-pill">3.2 μS</span>
+          </div>
+          <p class="param-desc">
+            Palmar skin conductance driven by sympathetic nervous system activation. Elevates instantly under acute cognitive demand, anxiety, or stress.
+          </p>
+          <div class="param-slider-row">
+            <input id="slider-eda" type="range" min="1.0" max="14.0" step="0.2" value="3.2">
+          </div>
+          <div class="param-presets">
+            <button class="preset-chip" data-param="eda" data-val="2.1">Calm (2.1)</button>
+            <button class="preset-chip" data-param="eda" data-val="3.2">Nominal (3.2)</button>
+            <button class="preset-chip" data-param="eda" data-val="9.8">High Stress (9.8)</button>
+          </div>
+        </div>
+
+        <!-- Parameter 4: Pre-Propulsion Dwell Latency -->
+        <div class="param-card">
+          <div class="param-top">
+            <span class="param-title">⏱️ Pre-Propulsion Dwell (ms)</span>
+            <span id="param-dwell-val" class="param-value-pill">290 ms</span>
+          </div>
+          <p class="param-desc">
+            Contact dwell latency before takeoff initiation (Hesitation Index). Reflects motor planning latency, cognitive uncertainty, or tactile confidence.
+          </p>
+          <div class="param-slider-row">
+            <input id="slider-dwell" type="range" min="100" max="800" step="10" value="290">
+          </div>
+          <div class="param-presets">
+            <button class="preset-chip" data-param="dwell" data-val="160">Snap (160)</button>
+            <button class="preset-chip" data-param="dwell" data-val="290">Nominal (290)</button>
+            <button class="preset-chip" data-param="dwell" data-val="560">Hesitant (560)</button>
+          </div>
+        </div>
+
+        <!-- Parameter 5: Handrail Physical Geometry -->
+        <div class="param-card">
+          <div class="param-top">
+            <span class="param-title">📏 Handrail Dimensions (mm)</span>
+            <span id="param-geo-val" class="param-value-pill">600 × 32 mm</span>
+          </div>
+          <p class="param-desc">
+            Physical length and cylindrical diameter. Modifying length adjusts total sensor count (150 cells for 600 mm, 120 cells for 480 mm).
+          </p>
+          <div style="display:flex;gap:10px;margin-bottom:12px;">
+            <label style="font-size:11px;color:var(--text-faint);flex:1;">Length (mm):
+              <input id="length" type="number" min="40" max="2000" step="40" value="600" style="width:100%;background:rgba(4,6,13,0.8);border:1px solid var(--border);border-radius:6px;padding:6px;margin-top:4px;">
+            </label>
+            <label style="font-size:11px;color:var(--text-faint);flex:1;">Diameter (mm):
+              <input id="diameter" type="number" min="20" max="80" value="32" style="width:100%;background:rgba(4,6,13,0.8);border:1px solid var(--border);border-radius:6px;padding:6px;margin-top:4px;">
+            </label>
+          </div>
+          <button id="apply-geometry" class="btn btn-secondary btn-sm" style="width:100%;">Apply Handrail Geometry</button>
+        </div>
+
+        <!-- Parameter 6: Hardware Serial Stream -->
+        <div class="param-card">
+          <div class="param-top">
+            <span class="param-title">🔌 Hardware USB Connection</span>
+            <span id="param-hw-val" class="param-value-pill">Synthetic Stream</span>
+          </div>
+          <p class="param-desc">
+            Connect live microcontroller tactile stream via Web Serial API (115200 baud) or import JSON sensor recordings.
+          </p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+            <select id="source" style="display:none;"><option value="demo">Demo</option><option value="import">Import</option><option value="usb">USB</option></select>
+            <label>Arduino data format <select id="usb-format"><option value="auto">Auto detect · Arduino CSV / Dense JSON</option><option value="dense">Dense JSON</option><option value="legacy">Arduino · 10 capacitive zones</option></select></label><p id="arduino-status" role="status">Connect your Arduino at 115200 baud. Keep your hand off the bar during calibration.</p><div id="arduino-zones" class="arduino-zones"></div><p>CSV mapping: Z1–Z10 → first ten cells in 3–2–2–3 order. Other cells are unmeasured. Raw values are capacitive counts, not pressure.</p>
+            <button id="connect" class="btn btn-primary btn-sm">Connect USB</button>
+            <button id="disconnect" class="btn btn-secondary btn-sm" disabled>Disconnect</button>
+            <label class="btn btn-secondary btn-file btn-sm">Import JSON
+              <input id="record-file" type="file" accept=".json,application/json">
+            </label>
+            <button id="sample" class="btn btn-secondary btn-sm">Download Demo</button>
+            <label id="legacy-check" hidden><input id="legacy-geometry" type="checkbox"></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         05 / CONTINUOUS RECORDING TIMELINE
+         ========================================================== -->
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-header-main">
+          <span class="eyebrow">05 / RECORDING TIMELINE & TIME SCRUBBER</span>
+          <h3>Continuous Flight Contact & Force History</h3>
+          <p>Drag the time cursor or press Play to inspect dynamic push-off maneuvers frame-by-frame.</p>
+        </div>
+        <span id="clock" class="badge">00:25</span>
+      </div>
+
+      <svg id="timeline" viewBox="0 0 1000 180" role="img" aria-label="Active contact cells over time"></svg>
+
+      <div class="transport">
+        <button id="play" class="btn-transport" aria-label="Play recording">▶</button>
+        <input id="cursor" aria-label="Time cursor" type="range" min="0" max="120" step=".5" value="25">
+      </div>
+
+      <details>
+        <summary>Cell-by-Cell Tactile Matrix Heatmap (150 Channels)</summary>
+        <p style="font-size:12px;color:var(--text-dim);margin:8px 0;">Each horizontal strip corresponds to one physical 10 × 10 mm tactile cell.</p>
+        <div style="width:100%;overflow-x:auto;">
+          <canvas id="heatmap" aria-label="Contact timeline for every sensor cell" style="height:140px;"></canvas>
+        </div>
+      </details>
+    </section>
+
+    <!-- ==========================================================
+         06 / MULTIMODAL SENSOR TELEMETRY CHANNELS
+         ========================================================== -->
+    <section id="physiology" class="panel">
+      <div class="panel-header">
+        <div class="panel-header-main">
+          <span class="eyebrow">06 / MULTIMODAL SENSOR TELEMETRY</span>
+          <h2>Independent Flight Physiological Channels</h2>
+          <p>Synchronized to the flight time cursor. Sensor channels operate independently to avoid false inferences.</p>
+        </div>
+        <span id="channels-origin" class="badge">SYNTHETIC</span>
+      </div>
+
+      <div id="channel-cards" class="channels-grid"></div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px;color:var(--text-faint);font-family:var(--mono);">Selected Telemetry Timeline:
+          <select id="channel-select" style="background:rgba(4,6,13,0.85);border:1px solid var(--border);padding:6px 12px;border-radius:8px;color:var(--cyan);margin-left:8px;">
+            <option value="push_force_n">Push-Off Normal Force · N</option>
+            <option value="shear_force_n">Shear / Propulsion Force · N</option>
+            <option value="micro_tremor_rms">8–12 Hz Micro-Tremor RMS · mm/s²</option>
+            <option value="skin_conductance_us">Skin Conductance (EDA) · μS</option>
+            <option value="dwell_time_ms">Pre-Propulsion Dwell Time · ms</option>
+            <option value="slip_velocity_mm_s">Center of Pressure Slip Velocity · mm/s</option>
+            <option value="grip_force_n">Grip Force · N</option>
+            <option value="peak_pressure_kpa">Peak Cell Pressure · kPa</option>
+            <option value="heart_rate_bpm">Heart Rate · bpm</option>
+            <option value="respiration_bpm">Respiration Rate · breaths/min</option>
+            <option value="skin_temperature_c">Skin Temperature · °C</option>
+            <option value="spo2_pct">Oxygen Saturation (SpO₂) · %</option>
+            <option value="acceleration_m_s2">Propulsion Acceleration · m/s²</option>
+          </select>
+        </label>
+      </div>
+
+      <svg id="channel-chart" viewBox="0 0 1000 180" role="img" aria-label="Selected measurement over time"></svg>
+    </section>
+
+    <!-- ==========================================================
+         07 / PERSONAL BASELINE & SUBJECTIVE CONTEXT
+         ========================================================== -->
+    <div class="columns">
+      <section class="panel">
+        <span class="eyebrow">07 / ASTRONAUT BASELINE</span>
+        <h3 style="font-size:18px;margin:6px 0 12px;">Contextual Calibration Reference</h3>
+        <div style="display:flex;gap:10px;margin-bottom:12px;">
+          <label style="flex:1;font-size:11px;color:var(--text-faint);">Astronaut ID:
+            <input id="participant" value="DEMO-01" maxlength="80" style="width:100%;background:rgba(4,6,13,0.8);border:1px solid var(--border);border-radius:6px;padding:6px;margin-top:4px;">
+          </label>
+          <label style="flex:1;font-size:11px;color:var(--text-faint);">Mission Task:
+            <input id="task" value="Station keeping" maxlength="80" style="width:100%;background:rgba(4,6,13,0.8);border:1px solid var(--border);border-radius:6px;padding:6px;margin-top:4px;">
+          </label>
+        </div>
+        <p id="baseline" style="font-size:12px;color:var(--text-dim);font-family:var(--mono);line-height:1.5;"></p>
+      </section>
+
+      <section class="panel">
+        <span class="eyebrow">08 / SUBJECTIVE EMOTION REPORT</span>
+        <h3 style="font-size:18px;margin:6px 0 12px;">Astronaut Self-Reported Affect</h3>
+        <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">Subjective emotional state reported directly by the crew member.</p>
+        <form id="report-form" style="display:flex;gap:10px;margin-bottom:14px;">
+          <select id="feeling" style="background:rgba(4,6,13,0.8);border:1px solid var(--border);padding:6px 12px;border-radius:6px;color:var(--text);">
+            <option>Calm</option>
+            <option>Tense</option>
+            <option>Frustrated</option>
+            <option>Positive</option>
+            <option>Neutral</option>
+          </select>
+          <button class="btn btn-secondary btn-sm">Add Self-Report</button>
+        </form>
+        <div id="reports" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+      </section>
+    </div>
+
+    <!-- ==========================================================
+         08 / FLIGHT RESEARCH PROVENANCE & NASA CONTEXT
+         ========================================================== -->
+    <section class="panel" id="evidence">
+      <span class="eyebrow">09 / SCIENTIFIC GROUNDING & NASA EVIDENCE</span>
+      <h2 style="font-size:24px;margin:6px 0 16px;">Flight Research Context & Architecture</h2>
+      <div class="spacecraft-grid">
+        <div class="vessel-card" style="cursor:default;">
+          <span class="eyebrow">ESA / NASA ISS</span>
+          <strong style="margin:6px 0;">GRIP Experiment</strong>
+          <p>Investigates grip force regulation and object manipulation in microgravity using instrumented friction bars.</p>
+          <a href="https://www.nasa.gov/image-article/nasa-astronaut-josh-cassada-works-grip-experiment/" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--cyan);font-family:var(--mono);">NASA GRIP Overview ↗</a>
+        </div>
+        <div class="vessel-card" style="cursor:default;">
+          <span class="eyebrow">CSA / NASA ISS</span>
+          <strong style="margin:6px 0;">Bio-Monitor System</strong>
+          <p>Wearable research platform recording ECG, respiration, skin temperature, and acceleration during long-duration flight.</p>
+          <a href="https://www.csa-asc.gc.ca/eng/sciences/bio-monitor.asp" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--cyan);font-family:var(--mono);">CSA Bio-Monitor ↗</a>
+        </div>
+        <div class="vessel-card" style="cursor:default;">
+          <span class="eyebrow">OUR HACKATHON CONTRIBUTION</span>
+          <strong style="margin:6px 0;">Instrumented Dense Handrail</strong>
+          <p>Records tactile contact and experimental grip measurements for future phenotyping research with 10 × 10 mm taxels in 3–2–2–3 pattern.</p>
+          <span style="font-size:10px;color:var(--ok);font-family:var(--mono);">100% Local Browser Execution</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      ASTROKINETIC-ID / SENSOR STUDIO 04 · NASA SPACE APPS CHALLENGE
+      <span>Experimental Research Platform · Behavioral & Neuromotor Digital Phenotyping</span>
+    </footer>
+  </main>
+</body>
+</html>

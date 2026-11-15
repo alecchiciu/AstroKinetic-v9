@@ -1,0 +1,129 @@
+.focus-details{margin:18px 0;border:1px solid #8f7cff30;border-radius:16px;background:#0c1120}.focus-details>summary{padding:20px 24px;color:#cbd8f5;font-weight:600;cursor:pointer}.focus-details[open]>summary{border-bottom:1px solid #8f7cff30}.focus-details>.panel,.focus-research{margin:0;padding:24px;border:0}.focus-note{font-size:12px;color:#9aa6c8;padding:12px 0}.focus-hardware{padding:12px 0}.guide-tabs{display:flex;flex-wrap:wrap;gap:8px}.guide-tabs button{flex:1;min-width:140px}.focus-details section{max-width:100%}#stress-research{scroll-margin-top:100px}#guided-setup .mode-cards{margin:12px 0}#stress-research>.panel{margin-top:0}
+.rail-list-disclosure{margin:18px 0}.rail-list-disclosure>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;cursor:pointer;list-style:none;color:var(--cyan,#5ef2ff);font-family:var(--mono,monospace);font-size:12px;letter-spacing:1px;border:1px solid #5ef2ff30;border-radius:12px}.rail-list-disclosure>summary::-webkit-details-marker{display:none}.rail-list-disclosure>summary::after{display:none!important}.rail-chevron{display:inline-block;font-size:24px;transition:transform .2s}.rail-list-disclosure[open] .rail-chevron{transform:rotate(90deg)}.rail-list-disclosure>.rail-list{margin-top:12px}.rail-list-disclosure>summary:focus-visible{outline:2px solid #5ef2ff;outline-offset:3px}@media(prefers-reduced-motion:reduce){.rail-chevron{transition:none}}
+/* V8 compact layout: presentation only; retain all telemetry and controls. */
+main{gap:16px;padding-top:24px}
+main>section,main>.focus-details{margin-top:0;margin-bottom:0}
+.focus-details{padding:0;margin:10px 0;border-radius:12px}
+.focus-details>summary{padding:13px 18px;min-height:44px;box-sizing:border-box}
+.focus-details>.panel,.focus-research{padding:18px}
+#stress-research{padding:20px}
+#stress-research>.panel{padding:20px}
+#stress-research .focus-note{padding:4px 0;margin:8px 0 0}
+#indicator-details{margin:0}
+#live-detection-section{padding:18px}
+#live-detection-section .panel-header{margin-bottom:12px;gap:12px}
+#live-detection-section .panel-header h2{font-size:24px;margin:6px 0}
+#live-detection-section .panel-header p{font-size:13px;line-height:1.5;margin:6px 0;max-width:none}
+#live-detection-section .eyebrow{font-size:10px;letter-spacing:1.2px}
+#live-detection-section .live-detection-banner{padding:10px 14px;margin:0 0 12px;gap:10px;border-radius:12px}
+#live-detection-section .live-controls-group{gap:10px;flex-wrap:wrap}
+#live-detection-section .live-controls-group>label[for="detection-mode"]{display:none}
+#live-detection-section .affective-grid{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px;margin-bottom:12px;align-items:start}
+#live-detection-section .emotion-card,#live-detection-section .vega-hud-box{padding:14px;border-radius:12px;min-height:0}
+#live-detection-section .emotion-badge-row{gap:8px;flex-wrap:wrap;margin-bottom:8px}
+#live-detection-section .affective-state-title{font-size:23px;margin-bottom:5px;gap:8px}
+#live-detection-section .state-icon{font-size:22px}
+#live-detection-section .affective-state-desc,#live-detection-section .vega-text{font-size:12px;line-height:1.5;margin:6px 0}
+#live-detection-section .affective-wave-box{padding:8px;margin-top:8px}
+#live-detection-section .wave-canvas{height:42px!important;width:100%}
+#live-detection-section .vega-header{margin-bottom:8px;font-size:10px;letter-spacing:1px}
+#live-detection-section .vega-recommendation{padding:7px;margin-top:8px;font-size:10px}
+#live-detection-section .pheno-cards-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+#live-detection-section .pheno-card{padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-content:start}
+#live-detection-section .pheno-label{font-size:10px;letter-spacing:.5px;margin:0;align-self:center}
+#live-detection-section .pheno-val{font-size:19px;text-align:right;white-space:nowrap}
+#live-detection-section .pheno-card>.dim,#live-detection-section .pheno-sub{grid-column:1/-1;font-size:11px;line-height:1.4;margin:0}
+#live-detection-section .composite-meters-row{gap:10px;margin:0}
+#live-detection-section .meter-box{padding:12px}
+#live-detection-section .meter-header{font-size:12px;margin-bottom:6px}
+#live-detection-section .meter-sub{font-size:11px;line-height:1.4}
+@media(max-width:900px){#live-detection-section .pheno-cards-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){main{gap:12px}#live-detection-section .affective-grid,#live-detection-section .pheno-cards-grid{grid-template-columns:1fr}#live-detection-section .live-detection-banner{align-items:flex-start;flex-direction:column}.focus-details>summary{padding:12px 14px}#live-detection-section .live-scenario-select select{max-width:100%;width:100%}}
+/* Keep the digit breakdown below both visuals instead of a tall narrow sidebar. */
+#surface .tactile-studio-split{grid-template-columns:minmax(240px,.65fr) minmax(0,2fr);gap:16px;align-items:start}
+#surface .hand-view-card,#surface .rail-visualizer-card{min-width:0;padding:16px}
+#surface .hand-view-header{flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:8px}
+#surface .hand-svg-container{height:220px;margin-bottom:8px}
+#surface #pose-result{min-height:0!important;margin-bottom:0!important;font-size:11px!important;line-height:1.5}
+.compact-digit-strip{grid-column:1/-1;padding:14px 16px;background:var(--surface-card);border:1px solid var(--border);border-radius:12px}
+.compact-digit-strip h3{font-size:14px;margin:0 0 10px}
+#surface #pose-fingers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0}
+#surface .digit-bar-card{min-width:0;padding:10px}
+#surface .digit-bar-header{flex-wrap:wrap;gap:4px;font-size:12px}
+#surface .digit-bar-card small{font-size:10px;line-height:1.4;display:block;margin-top:6px}
+.compact-pose-controls{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.compact-pose-controls>div{margin-top:0!important;flex-wrap:wrap}
+@media(max-width:1000px){#surface .tactile-studio-split{grid-template-columns:minmax(220px,.75fr) minmax(0,1.5fr)}#surface #pose-fingers{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){#surface .tactile-studio-split{grid-template-columns:1fr}#surface #pose-fingers{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Compact connection controls inside the selected handrail panel. */
+#surface #guided-setup.rail-connect-panel{padding:14px 16px;margin:0 0 16px;background:rgba(15,24,42,.65);border-radius:12px;box-shadow:none;scroll-margin-top:90px}
+#surface #guided-setup>.eyebrow{font-size:9px;letter-spacing:1px}
+#surface #guided-setup h2{font-size:19px;margin:3px 0 5px}
+#surface #guided-setup>p{font-size:12px;line-height:1.45;margin:0 0 8px}
+#surface #setup-controls{gap:8px;margin:8px 0;align-items:center}
+#surface #setup-controls select{padding:7px 9px;font-size:12px;max-width:100%}
+#surface #setup-controls .btn{padding:7px 12px;font-size:12px}
+#surface .rail-connect-panel .mode-command-bar{padding:9px 12px;gap:8px;margin:8px 0;border-radius:10px}
+#surface .rail-connect-panel .mode-command-bar label{font-size:12px}
+#surface .rail-connect-panel .mode-command-bar select{min-width:160px;padding:7px}
+#surface .rail-connect-panel .mode-command-bar button{padding:8px 16px!important;font-size:13px!important}
+#surface .rail-connect-panel .mode-cards{grid-template-columns:1.3fr 1fr 1fr;gap:8px;margin:8px 0 0}
+#surface .rail-connect-panel .mode-cards button{padding:10px 12px;font-size:13px}
+#surface .rail-connect-panel .mode-cards small{font-size:11px;margin-top:3px}
+#surface .rail-connect-panel .featured-lab{border:1px solid #5ef2ff;box-shadow:inset 3px 0 #5ef2ff}
+@media(max-width:620px){#surface .rail-connect-panel .mode-cards{grid-template-columns:1fr}#surface #setup-controls>*{max-width:100%}}
+/* Selected rail: primary visualization with a compact right-hand sidebar. */
+#surface .tactile-studio-split{grid-template-columns:minmax(0,1fr) 270px;gap:14px;align-items:start}
+.rail-hand-sidebar{min-width:0;display:flex;flex-direction:column;gap:10px}
+#surface .rail-hand-sidebar .hand-view-card{padding:10px}
+#surface .rail-hand-sidebar .hand-svg-container{height:135px;margin:4px auto}
+#surface .rail-hand-sidebar .hand-view-header{margin:0;gap:4px}
+#surface .rail-hand-sidebar .hand-view-header h3{font-size:12px!important}
+#surface .rail-hand-sidebar .hand-view-header .eyebrow{font-size:8px!important}
+#surface .rail-hand-sidebar #pose-badge{font-size:8px;padding:3px 6px}
+#surface .rail-hand-sidebar #pose-result{font-size:10px!important;line-height:1.35}
+#surface .rail-hand-sidebar .compact-digit-strip{padding:10px}
+#surface .rail-hand-sidebar .compact-digit-strip h3{font-size:12px;margin-bottom:6px}
+#surface .rail-hand-sidebar #pose-fingers{grid-template-columns:1fr;gap:4px}
+#surface .rail-hand-sidebar .digit-bar-card{padding:6px 8px}
+#surface .rail-hand-sidebar .digit-bar-header{font-size:10px;line-height:1.2;margin-bottom:4px}
+#surface .rail-hand-sidebar .digit-bar-card small{font-size:9px;margin-top:3px;line-height:1.25}
+#surface .rail-hand-sidebar .digit-track{height:3px}
+#surface .rail-hand-sidebar .compact-pose-controls{gap:6px;margin-top:6px}
+#surface .rail-hand-sidebar .compact-pose-controls .btn{padding:5px 7px;font-size:10px}
+#surface .rail-hand-sidebar .compact-pose-controls label{font-size:10px}
+#surface .rail-affect-panel{padding:14px 16px;margin:14px 0 0;border-radius:12px;scroll-margin-top:90px}
+.rail-affect-panel>.eyebrow{font-size:9px;letter-spacing:1px}
+.rail-affect-panel>h3{font-size:15px;margin:5px 0}
+.rail-affect-panel>p{font-size:11px;margin:4px 0 10px;line-height:1.4}
+.rail-affect-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.rail-affect-verdict #affect-result{padding:14px;margin:0;border-radius:10px}
+.rail-affect-verdict #affect-title{font-size:23px;margin-bottom:6px}
+.rail-affect-verdict #affect-explanation{font-size:12px;line-height:1.4;margin:6px 0}
+.rail-affect-verdict #affect-match{font-size:11px}
+.rail-affect-verdict #affect-status{font-size:10px;line-height:1.4;color:#9aa6c8;margin:8px 0 0}
+.rail-affect-details{display:grid;gap:5px;min-width:0}
+.rail-affect-details>details{margin:0;padding:0;border-radius:8px}
+.rail-affect-details>details>summary{padding:9px 11px;min-height:36px;font-size:11px}
+.rail-affect-details>details>:not(summary){margin:8px 10px;font-size:11px;line-height:1.5}
+.rail-affect-details .research-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.rail-affect-details .research-grid article{padding:8px;border-radius:8px;min-width:0}
+.rail-affect-details .research-grid h4{font-size:11px;margin:0 0 5px}
+.rail-affect-details .research-grid p{font-size:10px}
+.rail-affect-details select{max-width:100%;font-size:11px;padding:6px;background:#10192b;color:#e8eeff;border:1px solid #334465;border-radius:6px}
+.rail-affect-details button{font-size:11px;padding:6px 9px}
+@media(max-width:900px){#surface .tactile-studio-split{grid-template-columns:minmax(0,1fr) 230px}}
+@media(max-width:700px){#surface .tactile-studio-split,.rail-affect-layout{grid-template-columns:1fr}#surface .rail-hand-sidebar #pose-fingers{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Compact rail metrics and balanced CASE disclosures. */
+#surface .rail-visualizer-card>.pheno-cards-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:10px!important;margin-bottom:0}
+#surface .rail-visualizer-card>.pheno-cards-grid>.pheno-card{padding:8px 9px!important;min-width:0;border-radius:9px}
+#surface .rail-visualizer-card>.pheno-cards-grid .pheno-label{font-size:9px;letter-spacing:.4px;line-height:1.3;margin-bottom:4px}
+#surface .rail-visualizer-card>.pheno-cards-grid .pheno-val{font-size:14px!important;line-height:1.3}
+.rail-affect-layout{align-items:center}
+.rail-affect-details{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;align-items:start}
+.rail-affect-details>details{min-width:0}
+.rail-affect-details>details>summary{position:relative;justify-content:center;text-align:center;padding:10px 24px 10px 10px;min-height:48px;box-sizing:border-box;line-height:1.35}
+.rail-affect-details>details>summary::after{position:absolute;right:9px;top:50%;transform:translateY(-50%)}
+.rail-affect-details>details[open]{grid-column:1/-1}
+@media(max-width:900px){#surface .rail-visualizer-card>.pheno-cards-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:450px){#surface .rail-visualizer-card>.pheno-cards-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rail-affect-details{grid-template-columns:1fr}}
